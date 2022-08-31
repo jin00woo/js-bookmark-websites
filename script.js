@@ -5,6 +5,19 @@ function saveBookmark(e){
   const siteName = document.getElementById("siteName").value;
   const siteUrl = document.getElementById("siteUrl").value;
 
+  if(!siteName || !siteUrl){
+    alert("Please fill in the form");
+    return false;
+  }
+
+  const expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+  const regex = new RegExp(expression);
+
+  if(!siteUrl.match(regex)){
+    alert("Please use a valid URL");
+    return false;
+  }
+
   const bookmark = {
     name: siteName,
     url: siteUrl
