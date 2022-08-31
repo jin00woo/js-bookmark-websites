@@ -1,0 +1,56 @@
+document.getElementById("myForm").addEventListener("submit", saveBookmark);
+
+function saveBookmark(e){
+  e.preventDefault();
+  const siteName = document.getElementById("siteName").value;
+  const siteUrl = document.getElementById("siteUrl").value;
+
+  const bookmark = {
+    name: siteName,
+    url: siteUrl
+  };
+
+  if(localStorage.getItem("bookmarks") === null){
+    const bookmarks = [];
+    bookmarks.push(bookmark);
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  }
+  else{
+    const bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+    bookmarks.push(bookmark);
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  }
+
+  fetchBookmarks();
+}
+
+function deleteBookmark(url){
+  const bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+  for(let i = 0; i < bookmarks.length; i++){
+    if(bookmarks[i].url === url){
+      bookmarks.splice(i, 1);
+    }
+  }
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+
+  fetchBookmarks();
+}
+
+function fetchBookmarks(){
+  const bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+  const bookmarksResults = document.getElementById("bookmarksResults");
+  bookmarksResults.innerHTML = "";
+  
+  for(let i = 0; i < bookmarks.length; i++){
+    const name = bookmarks[i].name;
+    const url = bookmarks[i].url;
+
+    bookmarksResults.innerHTML += `
+    <div class="well">
+      <h3>${name}</h3>
+      <a class="btn btn-info" target="_blank" href='${url}'>Visit</a>
+      <a onclick=deleteBookmark('${url}') class="btn btn-danger" href='#'>Delete</a>
+    </div>
+    `;
+  }
+}
